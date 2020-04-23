@@ -31,3 +31,7 @@ Finally... Start your Jenkins pipeline!  You can find this in the `cicd` project
 
 The Spring Boot app we will be building and deploying can be found here on the **demo-thursday** branch:
 https://github.com/pittar/spring-petclinic/tree/demo-thursday
+
+## Additional Resources
+
+[Red Hat Community of Practice: Jenkins Slaves](https://github.com/redhat-cop/containers-quickstarts/tree/master/jenkins-slaves)
