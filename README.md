@@ -1,8 +1,27 @@
-# CI/CD on OpenShift with Jenkins Pipelines
+# CI/CD with Jenkins, SonarQube and Sonatype Nexus
+
+**Original Demo Date: 2020-04-23**
+
+## Intro
+
+Continuous Integration and Continuous Delivery (CI/CD) is the engine that runs a development shop.  A mature CI/CD pipeline greatly improves the productivity of a development team and quality of the code they produce.  A few core responsibilities of a modern CI/CD pipline are:
+* Compile code
+* Run unit tests
+* Report on quality and security issues in the code base
+* Archive compiled artifacts
+* Deploy an application through a chain of environments.
+
+This demo will use Maven, Jenkins, Sonatype Nexus, and SonarQube as part of a CI/CD pipeline that will:
+* Compile application code
+* Run unit tests
+* Run quality reports to surface any code quality, security, or vulnerability issues
+* Archive the Java artifact
+* Build a new container image for the application
+* Deploy the application to the DEV, then UAT environments
 
 ## Setup
 
-First, install the CI/CD project and tools.  This is all ready to go with a single Kustomize command:
+First we will us the `oc` command line tool to setup the CI/CD environment. This is all ready to go with a single Kustomize command:
 ```
 $ oc apply -k overlays/cicd
 ```
@@ -35,3 +54,13 @@ https://github.com/pittar/spring-petclinic/tree/demo-thursday
 ## Additional Resources
 
 [Red Hat Community of Practice: Jenkins Slaves](https://github.com/redhat-cop/containers-quickstarts/tree/master/jenkins-slaves)
+
+Jenkins resources - OpenShift 3.x
+https://docs.openshift.com/container-platform/3.11/using_images/other_images/jenkins.html
+https://docs.openshift.com/container-platform/3.11/dev_guide/dev_tutorials/openshift_pipeline.html
+https://docs.openshift.com/container-platform/3.11/using_images/other_images/jenkins.html
+https://docs.openshift.com/container-platform/3.11/using_images/other_images/jenkins_slaves.html
+https://docs.openshift.com/container-platform/3.11/dev_guide/migrating_applications/continuous_integration_and_deployment.html
+
+
+Jenkins resources - OpenShift 4.x
