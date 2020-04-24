@@ -31,7 +31,9 @@ Next, install the application environments and builds.  Again, this is done with
 $ oc apply -k overlays/apps
 ```
 
-Finally, we need to grant the Jenkins service account access to our "DEV" and "UAT" environments so that it can roll out changes as part of the pipeline.
+**_NOTE:_**  At this point, if you're wondering "Ok... what is Kustomize and how did I just create three OpenShift project, install and configure Jenkins, SonarQube, Nexus, two app enviornments, and builds with two `oc` commands?", then you might want to take a look at [GitOps with Kustomize and Argo CD Demo]() from last week!
+
+Finally, we need to grant the Jenkins service account access to our "DEV" and "UAT" environments so that it can roll out changes as part of the pipeline.  This could also have been done with plain yaml files and Kustomize, but it's important to call these commands out here to emphasize the Role Based Access Control that is ubiquitous across the platform.  If we want Jenkins in the *cicd* project to be able to deploy applications in other projects, then we need to grant the Jenkins service account access to those projects.
 
 ```
 $ oc policy add-role-to-user admin system:serviceaccount:cicd:jenkins -n petclinic-dev
