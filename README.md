@@ -94,6 +94,49 @@ Also notice that the URLs are defined as variables.  This allows us to externali
 
 If you scroll way down in the POM file you will notice two [Maven build profiles](http://maven.apache.org/guides/introduction/introduction-to-profiles.html).  One for `quality` and one for `failsafe`.  We will only use the `quality` profile in this demo, but I left the `failsafe` one in place as an example of how you might run automated functional tests with a tool such as [Selenium Grid](https://www.selenium.dev/documentation/en/grid/).
 
+### Jenkins and Custom Settings
+
+It's important to be able to configure Jenkins to use a custom `settings.xml` file in order to configure Maven profiles, mirrors, properties, etc...  Luckily, this is straight forward to do with OpenShift.
+
+Configuring different Jenkins agents is as simple as creating a `ConfigMap` with a specific annotation: `role=jenkins-slave`
+
+You can see the `ConfigMap` used in this demo is one of the yaml files present in the `jenkins2` directory, specifically [jenkins-cm.yaml](https://github.com/demo-thursday/cicd-openshift-jenkins/blob/master/jenkins2/jenkins-cm.yaml).  Although the XML looks complicated, most of it is boiler plate and makes sense as you read through it. Highlights include:
+
+```
+      <volumes>
+        <org.csanchez.jenkins.plugins.kubernetes.volumes.ConfigMapVolume>
+          <mountPath>/home/jenkins/.m2</mountPath>
+          <configMapName>maven-settings-cm</configMapName>
+        </org.csanchez.jenkins.plugins.kubernetes.volumes.ConfigMapVolume>
+        <org.csanchez.jenkins.plugins.kubernetes.volumes.PersistentVolumeClaim>
+          <mountPath>/data/m2</mountPath>
+          <claimName>maven-m2</claimName>
+          <readOnly>false</readOnly>
+        </org.csanchez.jenkins.plugins.kubernetes.volumes.PersistentVolumeClaim>
+      </volumes>
+```
+
+This maps two volumes into the Jenkins Maven agent.  The first is another `ConfigMap`, this one contains the contents of our custom Maven `settings.xml` file into the agent's `.m2` directory.
+
+The second volume is a *persistent volume claim* that will be used to store dependencies once they are pulled in from Nexus.  This will greatly speed up subsequent builds.
+
+The next snippet of interest sets the Nexus username and password as environment variables in the Jenkins Maven agent.  These values come from a *Secret*.  If you look at the [settings.xml](https://github.com/demo-thursday/cicd-openshift-jenkins/blob/master/jenkins2/settings.xml) file that Maven will use, you can see that it references these environment variables in order to upload artifacts to Nexus.
+
+```
+          <envVars>
+            <org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar>
+              <key>MAVEN_SERVER_USERNAME</key>
+              <secretName>nexus-secret</secretName>
+              <secretKey>username</secretKey>
+            </org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar>
+            <org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar>
+              <key>MAVEN_SERVER_PASSWORD</key>
+              <secretName>nexus-secret</secretName>
+              <secretKey>password</secretKey>
+            </org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar>
+          </envVars>
+```
+
 
 ... To be continued.
 
