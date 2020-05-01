@@ -14,15 +14,21 @@ Once you triggered your build *way back* at the end of the first step, you might
 
 In the build progress area of the screen, you will see a **View logs** link below the build number.  Click on this and it will take you to the build in Jenkins.  You will need to login with your OpenShift credentials (RBAC!).
 
+![Jenkins Pipeline in OpenShift UI](images/jenkins-view-logs.png)
+
 Here you can watch the build logs as the build progresses.
 
 If you would prefer to switch to the "Blue Ocean" UI in Jenkins, then click on the *Open Blue Ocean* link in the left side menu.
+
+![Jenkins Blue Ocean](images/jenkins-blue-ocean.png)
 
 For a developer's day-to-day work, the Jenkins URL is really all you need to view and start builds.  There's no need to login to the OpenShift UI to monitor builds or build status.  At some point, you will likely want to set your builds up to be triggered by commits to your git repositories, rather than manually triggering them as well.
 
 ## Nexus
 
 After your build completes, take a look at your Nexus repository.  The primary role of Nexus is to be the Maven proxy for your organization.  CI/CD tools and developer workstations should all be configured (through settings.xml files in local `.m2` directories) to use Nexus as the Maven mirror.  Not only does this speed up builds and save bandwidth by caching artifacts inside your network, it also allows for control over the external repsitories that can be sources of artifacts and archives the the artifacts that you build.
+
+![Nexus](images/nexus.png)
 
 That being said, when Nexus is working properly you will very rarely ever open the UI.  It is just a proxy, after all.
 
@@ -33,6 +39,8 @@ Once in the Nexus UI, explore some of the repositories and you'll find the diffe
 ## SonarQube
 
 SonarQube is by far the most interesting tool in this chain.  By adding reporting plugins to our application POM file, and adding equivalent plugins to SonarQube, we can gather metrics about code quality, potential security issues, and vulnerable dependencies.  By surfacing code quality metrics in the form of a unified dashboard, it's much easier for your development teams to build high quality and secure code that meets corporate standards.  From the **Topology** view in the OpenShift **CICD** project, click on the "Open URL" decorator on the SonarQube pod to open the SonarQube UI.  Explore the PetClinic project to see the kinds of reports you can get from your code with very little effort.
+
+![SonarQube Dashboard](images/sonarqube.png)
 
 ## Recap
 
