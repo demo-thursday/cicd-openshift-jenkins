@@ -4,6 +4,10 @@
 
 Now that we have explored some of the configuration of the environment, let's take a look at what has happened during the build process.
 
+Looking back at the *Topology* view of the **CICD** project, you can find the links to the various tool dashboards that our pipline consists of.
+
+![CICD Project Topology View](images/cicd-project-small.png)
+
 ## Jenkins
 
 Once you triggered your build *way back* at the end of the first step, you might have noticed that the build progress started to appear in the OpenShift console.  Although this is nice, you get far more info from Jenkins itself.
