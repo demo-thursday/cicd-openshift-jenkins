@@ -76,6 +76,12 @@ We also want Maven to pull dependencies from our Nexus server and not directly f
 
 Finally, if you look at the bottom of the file you will see a few *profiles* that set properties.  Some of these are to setup SonarQube, some are for Maven, and they are all activated!
 
+## Recap
 
+In this `settings.xml` file we have:
+* Specified the directory where artifacts are cached between builds.
+* Configured Nexus to be our maven mirror for all artifacts.
+* Configured Nexus as the *snapshot* and *release* repository.
+* Configured and activated a number of *profiles*.
 
 [Next: Exploring the Build](05-exploring-build.md)

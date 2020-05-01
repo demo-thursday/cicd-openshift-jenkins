@@ -2,81 +2,39 @@
 
 [Back: Settings.xml](04-settings-xml.md)
 
-## Jenkins Agent Templates
+Now that we have explored some of the configuration of the environment, let's take a look at what has happened during the build process.
 
-It's important to be able to configure Jenkins to use a custom `settings.xml` file in order to configure Maven profiles, mirrors, properties, etc...  Luckily, this is straight forward to do with OpenShift.
+## Jenkins
 
-Configuring different Jenkins agents is as simple as creating a `ConfigMap` with a specific annotation: `role=jenkins-slave`
+Once you triggered your build *way back* at the end of the first step, you might have noticed that the build progress started to appear in the OpenShift console.  Although this is nice, you get far more info from Jenkins itself.
 
-You can see the `ConfigMap` used in this demo is one of the yaml files present in the `jenkins2` directory, specifically [jenkins-cm.yaml](https://github.com/demo-thursday/cicd-openshift-jenkins/blob/master/jenkins2/jenkins-cm.yaml).  Although the XML looks complicated, most of it is boiler plate and makes sense as you read through it. Highlights include:
+In the build progress area of the screen, you will see a **View logs** link below the build number.  Click on this and it will take you to the build in Jenkins.  You will need to login with your OpenShift credentials (RBAC!).
 
-```
-      <volumes>
-        <org.csanchez.jenkins.plugins.kubernetes.volumes.ConfigMapVolume>
-          <mountPath>/home/jenkins/.m2</mountPath>
-          <configMapName>maven-settings-cm</configMapName>
-        </org.csanchez.jenkins.plugins.kubernetes.volumes.ConfigMapVolume>
-        <org.csanchez.jenkins.plugins.kubernetes.volumes.PersistentVolumeClaim>
-          <mountPath>/data/m2</mountPath>
-          <claimName>maven-m2</claimName>
-          <readOnly>false</readOnly>
-        </org.csanchez.jenkins.plugins.kubernetes.volumes.PersistentVolumeClaim>
-      </volumes>
-```
+Here you can watch the build logs as the build progresses.
 
-This maps two volumes into the Jenkins Maven agent.  The first is another `ConfigMap`, this one contains the contents of our custom Maven `settings.xml` file into the agent's `.m2` directory.
+If you would prefer to switch to the "Blue Ocean" UI in Jenkins, then click on the *Open Blue Ocean* link in the left side menu.
 
-The second volume is a *persistent volume claim* that will be used to store dependencies once they are pulled in from Nexus.  This will greatly speed up subsequent builds.  This persistent volume will be mapped to `/data/m2` in the Jenkins Maven agent.
+For a developer's day-to-day work, the Jenkins URL is really all you need to view and start builds.  There's no need to login to the OpenShift UI to monitor builds or build status.  At some point, you will likely want to set your builds up to be triggered by commits to your git repositories, rather than manually triggering them as well.
 
-The next snippet of interest sets the Nexus username and password as environment variables in the Jenkins Maven agent.  These values come from a *Secret*.  If you look at the [settings.xml](https://github.com/demo-thursday/cicd-openshift-jenkins/blob/master/jenkins2/settings.xml) file that Maven will use, you can see that it references these environment variables in order to upload artifacts to Nexus.
+## Nexus
 
-```
-          <envVars>
-            <org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar>
-              <key>MAVEN_SERVER_USERNAME</key>
-              <secretName>nexus-secret</secretName>
-              <secretKey>username</secretKey>
-            </org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar>
-            <org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar>
-              <key>MAVEN_SERVER_PASSWORD</key>
-              <secretName>nexus-secret</secretName>
-              <secretKey>password</secretKey>
-            </org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar>
-          </envVars>
-```
+After your build completes, take a look at your Nexus repository.  The primary role of Nexus is to be the Maven proxy for your organization.  CI/CD tools and developer workstations should all be configured (through settings.xml files in local `.m2` directories) to use Nexus as the Maven mirror.  Not only does this speed up builds and save bandwidth by caching artifacts inside your network, it also allows for control over the external repsitories that can be sources of artifacts and archives the the artifacts that you build.
 
-Finally, you also need to specify the location of the Jenkins agent container image to use.  In this case, it is the stock Maven agent from the Red Hat image registry:
+That being said, when Nexus is working properly you will very rarely ever open the UI.  It is just a proxy, after all.
 
-```
-          <image>registry.redhat.io/openshift4/ose-jenkins-agent-maven:v4.3</image>
-```
+It's not a bad idea to familiarize yourself with Nexus, though.  After your build completes, open the Nexus UI (you can find the link in the OpenShift CI/CD project by clicking on the "open" decorator on the Nexus pod in the Topology view).
+
+Once in the Nexus UI, explore some of the repositories and you'll find the different Maven dependencies that the build required, as well as the "snapshot" build of your application jar that was uploaded at the end of the `mvn clean deploy` step.
+
+## SonarQube
+
+SonarQube is by far the most interesting tool in this chain.  By adding reporting plugins to our application POM file, and adding equivalent plugins to SonarQube, we can gather metrics about code quality, potential security issues, and vulnerable dependencies.  By surfacing code quality metrics in the form of a unified dashboard, it's much easier for your development teams to build high quality and secure code that meets corporate standards.  From the **Topology** view in the OpenShift **CICD** project, click on the "Open URL" decorator on the SonarQube pod to open the SonarQube UI.  Explore the PetClinic project to see the kinds of reports you can get from your code with very little effort.
 
 ## Recap
 
-So, what did we do here?
-1) Created a `ConfigMap` with an annotation of `role=jenkins-slave` that contains an XML-based template.
-2) Configure two volumes:
-    * One to mount a custom `settings.xml` file contained in a `ConfigMap` into the Maven agent `.m2` directory.
-    * One to mount a `PersistentVolumeClaim` to cache artifacts and CVE data between builds.
-3) Injected Nexus username and password data from a `Secret` as environment variables.
-4) Specified the container image to use for this Jenkins agent.
+Although there are certainly more tools we could add to our pipeline (Selenium Hub comes to mind), it's impressive to see how quicly and easily we have deployed and configured a few key industry standard tools, including:
+* Jenkins for the build and deploy pipline.
+* Nexus as an artifact repository and Maven proxy.
+* SonarQube for static code analysis, security analysis, and dependency vulnerability reporting.
 
-
-
-
-
-## Additional Resources
-
-[Red Hat Community of Practice: Jenkins Slaves](https://github.com/redhat-cop/containers-quickstarts/tree/master/jenkins-slaves)
-
-Jenkins resources - OpenShift 3.x
-https://docs.openshift.com/container-platform/3.11/dev_guide/dev_tutorials/openshift_pipeline.html
-https://docs.openshift.com/container-platform/3.11/using_images/other_images/jenkins.html
-https://docs.openshift.com/container-platform/3.11/using_images/other_images/jenkins_slaves.html
-https://docs.openshift.com/container-platform/3.11/dev_guide/migrating_applications/continuous_integration_and_deployment.html
-
-
-Jenkins resources - OpenShift 4.x
-https://docs.openshift.com/container-platform/4.3/openshift_images/using_images/images-other-jenkins.html
-https://docs.openshift.com/container-platform/4.3/openshift_images/using_images/images-other-jenkins-agent.html
-https://docs.openshift.com/container-platform/4.3/builds/understanding-image-builds.html
+[Next: Recap and Additional Resources](06-recap.md)
