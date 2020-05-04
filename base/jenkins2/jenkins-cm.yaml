@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/instance: jenkins
     app.kubernetes.io/part-of: jenkins
 data:
-  template1: |-
+  maven3: |-
     <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
       <inheritFrom></inheritFrom>
       <name>maven</name>
