@@ -15,6 +15,11 @@
         <username>${env.MAVEN_SERVER_USERNAME}</username>
         <password>${env.MAVEN_SERVER_PASSWORD}</password>
       </server>
+      <server>
+        <id>github-petclinic</id>  
+        <username>${env.GITHUB_USERNAME}</username>
+        <password>${env.GITHUB_PASSWORD}</password>
+      </server>   
     </servers>
     <mirrors>
       <mirror>
@@ -34,9 +39,6 @@
       </profile>
       <profile>
         <id>sonar</id>
-        <activation>
-          <activeByDefault>true</activeByDefault>
-        </activation>
         <properties>
           <sonar.host.url>
             http://sonarqube:9000
@@ -50,6 +52,5 @@
     <activeProfiles>
       <activeProfile>nexus-internal</activeProfile>
       <activeProfile>sonar</activeProfile>
-      <activeProfile>quality</activeProfile>
     </activeProfiles>
 </settings>
