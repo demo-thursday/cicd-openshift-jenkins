@@ -55,16 +55,6 @@ data:
           <resourceLimitMemory></resourceLimitMemory>
           <envVars>
             <org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar>
-              <key>GITHUB_USERNAME</key>
-              <secretName>github-secret</secretName>
-              <secretKey>username</secretKey>
-            </org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar>
-            <org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar>
-              <key>GITHUB_PASSWORD</key>
-              <secretName>github-secret</secretName>
-              <secretKey>password</secretKey>
-            </org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar>
-            <org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar>
               <key>MAVEN_SERVER_USERNAME</key>
               <secretName>nexus-secret</secretName>
               <secretKey>username</secretKey>
