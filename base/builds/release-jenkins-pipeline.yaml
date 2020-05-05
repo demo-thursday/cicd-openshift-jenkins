@@ -27,7 +27,7 @@ spec:
         value: https://github.com/pittar/spring-petclinic.git
       - name: GIT_SOURCE_REF
         value: demo-thursday
-      jenkinsfilePath: Jenkinsfile
+      jenkinsfilePath: Jenkinsfile.release
     type: JenkinsPipeline.release
   successfulBuildsHistoryLimit: 5
   triggers:

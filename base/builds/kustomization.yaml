@@ -4,4 +4,5 @@ namespace: cicd
 resources:
 - build-imagestream.yaml
 - build-jenkins-pipeline.yaml
+- release-jenkins-pipeline.yaml
 - build-s2i-build.yaml

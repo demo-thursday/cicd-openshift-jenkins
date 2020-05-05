@@ -11,6 +11,7 @@ resources:
 - jenkins-cm.yaml
 - maven-m2-pvc.yaml
 - nexus-secret.yaml
+- github-secret.yaml
 generatorOptions:
   labels:
     app: jenkins
