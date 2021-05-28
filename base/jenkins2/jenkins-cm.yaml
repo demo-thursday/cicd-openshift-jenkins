@@ -129,7 +129,11 @@ data:
           <resourceLimitCpu></resourceLimitCpu>
           <resourceLimitMemory></resourceLimitMemory>
           <envVars>
-             <org.csanchez.jenkins.plugins.kubernetes.ContainerEnvVar>
+            <org.csanchez.jenkins.plugins.kubernetes.ContainerEnvVar>
+              <key>JAVA_HOME</key>
+              <value>/etc/alternatives/java_sdk_11</value>
+            </org.csanchez.jenkins.plugins.kubernetes.ContainerEnvVar>
+            <org.csanchez.jenkins.plugins.kubernetes.ContainerEnvVar>
               <key>USE_JAVAC_VERSION</key>
               <value>java-11</value>
             </org.csanchez.jenkins.plugins.kubernetes.ContainerEnvVar>
