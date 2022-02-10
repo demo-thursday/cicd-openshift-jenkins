@@ -26,7 +26,7 @@ spec:
       containers:
       - env:
         - name: INSTALL_PLUGINS
-          value: structs:1.20,dependency-track:2.1.0
+          value: structs:1.23,dependency-track:2.1.0
         - name: OPENSHIFT_ENABLE_OAUTH
           value: "true"
         - name: OPENSHIFT_ENABLE_REDIRECT_PROMPT
