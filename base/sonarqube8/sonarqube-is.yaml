@@ -16,7 +16,7 @@ spec:
       tags: sonarqube
     from:
       kind: DockerImage
-      name: sonarqube:8.2-community
+      name: quay.io/pittar/sonarqube:8.2-community
     importPolicy: {}
     name: "8.2-community"
     referencePolicy:
