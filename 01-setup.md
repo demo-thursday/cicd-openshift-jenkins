@@ -11,7 +11,7 @@ $ oc apply -k overlays/cicd
 
 Next, install the application environments and builds.  Again, this is done with Kustomize:
 ```
-$ oc apply -k overlays/apps
+$ oc apply -k overlays/app
 ```
 
 > **_NOTE:_**  At this point, if you're wondering "Ok... what is Kustomize and how did I just create three OpenShift project, install and configure Jenkins, SonarQube, Nexus, two app enviornments, and builds with two `oc` commands?", then you might want to take a look at the [GitOps with Kustomize and Argo CD Demo](https://github.com/demo-thursday/gitops-kustomize-argocd) from last week!
